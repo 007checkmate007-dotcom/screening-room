@@ -746,7 +746,16 @@ $('tepkiler').addEventListener('click', (e) => {
   sonTepki = simdi;
   if (HOST_MU) tepkiDagit(b.dataset.t, ad);
   else if (hostBaglanti && hostBaglanti.open) { hostBaglanti.send({ tur: 'tepki', t: b.dataset.t }); tepkiOyna(b.dataset.t, ad); }
+  else bagliDegil();
 });
+
+/// Izleyici odaya baglanmadan tus ya da mesaj: sessizce kaybolmasin.
+let sonUyari = 0;
+function bagliDegil() {
+  if (Date.now() - sonUyari < 4000) return;
+  sonUyari = Date.now();
+  mesajEkle({ tur: 'sistem', alarm: true, metin: `not connected to the room yet. wait for "room active" at the top (${P.host} has to open the room).` });
+}
 
 // ------------------------------------------------------------ MR PHONK: kisa phonk ritmi (WebAudio, dosya yok)
 let ses = null;
@@ -831,6 +840,9 @@ $('yaz').addEventListener('submit', (e) => {
   } else if (hostBaglanti && hostBaglanti.open) {
     hostBaglanti.send({ tur: 'mesaj', metin });
     mesajEkle({ tur: 'mesaj', ad, metin, ben: true });
+  } else {
+    $('metin').value = metin;   // kaybolmasin, baglaninca gonderilir
+    bagliDegil();
   }
 });
 
