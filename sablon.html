@@ -538,11 +538,10 @@ function hostVeri(id, veri) {
 }
 
 /// Host: tepkiyi herkese yollar (basan izleyici kendisinde zaten oynatti);
-/// cigilikta skoru, cat boy'da cevabi yonetir.
+/// cigilikta skoru tutar.
 function tepkiDagit(t, kim, haric) {
   herkese({ tur: 'tepki', t, ad: kim }, haric);
   if (t === 'scream') { skor[kim] = (skor[kim] || 0) + 1; herkese({ tur: 'skor', s: skor }); }
-  if (t === 'catboy') setTimeout(() => herkese({ tur: 'mesaj', ad: P.host, metin: 'IM NOT CAT BOY' }), 1600);
 }
 
 /// Mesaji hostta gosterir ve gonderen disindaki herkese iletir.
