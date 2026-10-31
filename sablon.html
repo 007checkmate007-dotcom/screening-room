@@ -746,7 +746,7 @@ $('tepkiler').addEventListener('click', (e) => {
   sonTepki = simdi;
   if (HOST_MU) tepkiDagit(b.dataset.t, ad);
   else if (hostBaglanti && hostBaglanti.open) { hostBaglanti.send({ tur: 'tepki', t: b.dataset.t }); tepkiOyna(b.dataset.t, ad); }
-  else bagliDegil();
+  else { tepkiOyna(b.dataset.t, ad); bagliDegil(); }   // tek basina denerken de gorunsun
 });
 
 /// Izleyici odaya baglanmadan tus ya da mesaj: sessizce kaybolmasin.
