@@ -691,6 +691,12 @@ function sdpDuzenle(sdp) {
     h264.sort((a, b) => profil(a) - profil(b));
     const parca = satir[mi].split(' '), pt = parca.slice(3);
     if (h264.length) satir[mi] = [...parca.slice(0, 3), ...h264.filter((x) => pt.includes(x)), ...pt.filter((x) => !h264.includes(x))].join(' ');
+    // Taban hiz: Turkiye-ABD yolunda gecikme dalgalaninca Chrome hizi 0.1 Mbps'e
+    // (120p) indiriyordu, kayip yokken bile. 1 Mbps'in altina inmez, 1.5'tan baslar.
+    for (const no of h264) {
+      const fi = satir.findIndex((l) => l.startsWith(`a=fmtp:${no} `));
+      if (fi >= 0 && !/x-google-min-bitrate/.test(satir[fi])) satir[fi] += ';x-google-min-bitrate=1000;x-google-start-bitrate=1500';
+    }
   }
   const opus = satir.map((l) => l.match(/^a=rtpmap:(\d+) opus\/48000/i)).find(Boolean);
   if (opus) {
@@ -768,7 +774,7 @@ async function olcum() {
     const kayip = (uzak && uzak.fractionLost) || 0, ping = uzak && uzak.roundTripTime ? Math.round(uzak.roundTripTime * 1000) : '?';
     const neden = out.qualityLimitationReason || 'none', fps = out.framesPerSecond || 0;
     if (!mod && Date.now() - (k.baslangic || 0) > 8000) otoAyarla(k, pc, kayip, neden, fps);
-    const sebep = { bandwidth: 'your internet', cpu: 'your computer' }[neden];
+    const sebep = { bandwidth: 'the connection', cpu: 'your computer' }[neden];
     satirlar.push(`${k.ad || 'viewer'}: ${out.frameHeight || '?'}p${Math.round(fps)} · ${mbps.toFixed(1)} Mbps · ping ${ping} ms · loss ${(kayip * 100).toFixed(1)}%`
       + (sebep ? ` · held back by ${sebep}` : ''));
   }
