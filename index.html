@@ -112,10 +112,11 @@
   .tepki.cigilik { color: #ff6b7a; }
   .tepki.phonk { color: #c58bff; border-color: #7b4bb055; }
   .tepki.mikub { color: var(--miku); }
+  .tepki.atla { color: #ffd23f; border-color: #ffd23f55; }
 
   .ucan { position: absolute; bottom: 10%; z-index: 5; pointer-events: none; font-weight: 800; white-space: nowrap; animation: uc 2.6s ease-out forwards; text-shadow: 0 2px 10px #000a; }
   @keyframes uc { 0% { transform: translateY(0) scale(.6); opacity: 0; } 12% { opacity: 1; transform: translateY(-20px) scale(1.15); } 100% { transform: translateY(-260px) scale(1); opacity: 0; } }
-  .koca { position: absolute; inset: 0; z-index: 6; display: grid; place-items: center; text-align: center; pointer-events: none; font-weight: 800; animation: koca 1s ease-out forwards; }
+  .koca { position: absolute; inset: 0; z-index: 6; display: grid; place-items: center; text-align: center; pointer-events: none; font-weight: 800; white-space: pre-line; line-height: 1.1; animation: koca 1s ease-out forwards; }
   .koca.ciglik { font-size: min(18vw, 160px); color: #ff3b5c; text-shadow: 0 0 40px #ff3b5c; }
   .koca.phonkyazi { white-space: pre-line; line-height: 1; font-size: min(11vw, 96px); color: #c58bff; text-shadow: 0 0 30px #8a3cff; animation-duration: 2.8s; }
   .koca.uyari { font-size: min(7vw, 52px); color: #ffd23f; text-shadow: 0 0 24px #ff3b5c; animation-duration: 2.2s; }
@@ -211,6 +212,7 @@
       <button class="tepki" data-t="nya">nyaa~</button>
       <button class="tepki" data-t="eyes">👀</button>
       <button class="tepki" data-t="skull">💀</button>
+      <button class="tepki atla" data-t="skip">SKIP 😳</button>
     </div>
   </div>
   <aside class="sohbet">
@@ -241,7 +243,7 @@
 // anahtardan turetiliyor. Uretim: node kur.mjs
 'use strict';
 
-const PAKET = 'ZHLquhgwIJOEZ/y6M7vDEj5UXUyD8G1dFmCQ6bqbv0EAIdRX9IEUbpbO2WBAHm9IpKngU8fzA2EQBOx1GXUehBsvxgRB0jVbzI7325At40XElzjAVtLtJopGvAKZ/GX4htx19hd7Yt4ezoUVqRqrVl1vCwEQaVCnrVZHppy7vneSii9HmmIIN+uBez+rvxBYpkOQC2XwtVWpUwMX0eH2NZtDioUhQnHVDBaBXXSCj4L38cP1ELAewfzWqfJQb3TuaU/Dpgvyrw8ScZrQrVPwLh/cxy6TqMKFOcpa8crYp5PaSanPWt02uVe8ujXiNIoaY1mMn0p2A0SrNPD6OONtuoSfCDbjPaBVS02AfwXHaviQUDqTOdJsvwvq9aqDFQ/ScOoEIFyl/KVHXsuCD9ZPRlQHPh1aGtIcsuREtE1pwX/35EPYyJ4AeygFFk+bjMUQLEgX/2ygeW2psxMKXUH/CIoD1hunG9gTElG4AQVOTOa1saqkwlbg+k9LnXjUlklUJ/gRCZ61oYSmM3YdRMpOtXnS0bH/ay7Sm8sCDHcWUOvcc4VCOrR8SUyzqhP66BV0MXu0KFyWFxo/BU4DjGusnMTUZMEGduYNUlcYt8S6s11jefQ/jszF5s4vInKQ2DzvTqC2xn9FiT+5xU4LDIQMzZ7wVAw5RR1B+Tfz3FS7cPyHd/Wdwl3SXKga57Xmm+c3M41xclTXeynAvCvpO/25ryTwjFUHOf+L6xQ3Y4rddf+ukyfkswXAF390gB/4GiTjoa4R5csMlH0LOwL5U63u4Y3EhklhtAV2CLreeuR2DoBFHIBnebFFXD93yLRoYWWymCGE8CzSvnqNcHDQDIXHXl/Vf97u2zJ36jmRBgY2+3PIlFOq4l0SegLdsqvgBRuiw4HRu/kHdmH2rwdcyAU8Ceg+D68/tmWUAxDlYESag4c2TboVTADCRFmw3Pqbxt7FnluB+2trxdeuIdu3AGByEPigQoH8bCYE6pdU6Qvq5d5xssPuX80aOPiqD4wWi71YQFONtmNjRa1och3t0N6Gtu08rV3UKa/xmyNyqJHhKTmNXYEjnv4Lnh3lk7fbGhgUeBKuh010RFd7kE001hhqG1GpNx66+gQvVorn1+ogEQAJYhBz+TK0VqMxTiLwR+1+jbPUTfXwA4T1gzYwsepdpcaLrNrhHxlT7EcrtAvo+xosPG8mxJ9u2XQXSm5FdcQu7LeCKMungxpFLUAj1UCx85CUGh+RU7W9T6eYCf/saK6bINMcSNK5i0g0rtCrPGS19oTWIpH+Zaj+4UAiv8HdxnXKVqR0PwXI4T7UVx9TzJQp+nk3koKx1YmwWJxmd9vVeUT+cPuYQ/saT4ctsWcsLybGSTazsUlRvZptdPcNud4sHJqyAA7O21DOOo3P2tEDuFPsED1C68oCPGhveGr8EA3FQ5ANAYEmtYVDutIWQZSBdglsuoi2U3CI2hDEcL8m/uD8LJTPAfpwjvVD1Zb1bFQv6us6nByE01dLiDGWS8CQkdKb8LEJRBQd3RPySyvdnMyj4AemqJ6C/STihWL0jEpZgz070w4KDI1uj/bD2iT2uCvTTYU1aTcT3FeB0FVXxF0s+O9k8r8d2USa1wSdWYT+uNaN9hyITNlvjRr1CxPhuY5f26obct4KZkwiMjLucLpym4tr+l2RLvViSeW4IwvLUjoka+onZWwjLSV7nLpU9zPv+QeDqgABnMQPQq/t6CgSTIAoguU3Uwt+//RZU9on5bgNR2aMJFLRWUjE';
+const PAKET = '1m/D34KmqhJftWN1GMIwS8j2pTZIKaih6F2qYMAX2O2rCrvgcrv/honpocPMUhSTfmRd3NlSqk8siFzBG4PTeJFB59XeHoB9oOLtUZ8YLrCxRAMgUkAw6RHwAFX0uD69qsyvF4MwJVAy3WXIPuu1ppTrdVsxaVBh9XEEt0PKjGVUtpPzhAwtQDJX2Oa3QPgneRCg+zSgQU3n9OSqX6pJxT/cMt7tuNDSgSI+70YdTm1ANaj96M3tDsvCwKmBHcTtV4MpTB5KjY1gRY2Ydv3Re8Fot047L6FSzJ+ya2ZIA+7ZT6A5F6eo9u8SmPHXC9r1mq+wUjWl1vGlF2Aq0AhROKvyhAyxGDErPsnVfTMhOyXx8dAGvB9vws1EaxFa9y66p7q6ihOMcNVWlUvcNpwjT5VBZ9xThQJvodmsSH5QHnp/pdTgAyz+OmD2/G625FZzQk6qLIiTrdQJQkGj1Opsihx2lJlQKbUpCEdiJpIJAE+LUN8EYnbOqJSJhCgPpaqFuXBhVJFmxJqNYz3nyUrKy6tZlSPt71Goq1+t2UgxQIxDI3oyYE3nqqe/pvOT6+bphNh7z+kAlTsh4oA2hQW4pjYpqvw94SzPQJmKGH2Hf4BDRv+YzhPAhRSQLmDV/rjcaJrd8uSYCoW+UAD3SP2kbCSEybUsX90FcuTpcnHv49bAzoScmjcLUjzZiIZseJzO0MH45THnxoeV4DAZpYz6J1DZaEhClMRXqY4AQM1a6X9SHwe2R36c4h4NA1OctXUart1eouuh4zO2zSXy22142D3ZRjyLCmk/Gg/V2kRAt8c0GanyoSGhXoeviGcJy0cbMjbGsmSJzFyj5mog/38jnZbJsf/qkc7YBI8TGYjqgzAxikrvun7UPmJZtIk7UofyeWzzvAuzQhptjy9grAZzzs6XZaEjddvyHuWJEof8XXowVho48cnZYkgbSDCvwJTv4JwFYLiFDEfPSjahvh/7GY87ftGrow/G5JusnOrrnNcCS05OiN/GrCDkAnSXWBtEJShmgrTNRyQPP9xwb7pjbonks2CeGFW5vJGyw+0StJphTGoxLo28bvdEAFejfEi76Kqr2Nj62o7XIoExzrvUGCRasr7guxdJGQXgC6p80p0eVwsLTJiRBrECSFF24CgaTuM4sGdAeUMSIRhT8bQI/WhSQgBOCC5XwAPT4NZETGPORYQFIyfzyGwWWXXaoA14Wdne65S8SEbfqvpxc0yA32kQK1NeTBA5OqFG8AligECty2+AV/iTZ1Xx9QVwqoD7qvIUb/YwMKx/9bq1kLBahtBTkdmJmR2pCFm5SfLvt5LFbev+oEz6P6/cqmJEbnjti4B7w/HDWlqUJ4fJpR8qRu3pVAnReY90yc4pHyvUspDwJ61gy5hy6cYP8hzKz9APQl6EXeTn1qorHsFMHuJ82puGYoJtsH7P9M/YxzeG9Pjke8I+U/WjKVCFz37hjPuGoQtFQHx5xtDF6F1ga9Z9GWkY0BO1HTfqWbCl5gAQywnLnPHtULcU7fwUToMnNlb72vLDW3ytjXLAHK3Lwi0TnhcL/0oh3evxBP6pE6v7shAEzWxX9+8pSirbG+LTIAtgmpSfINQ+OJd+EnGGCpnnPfxlLNuMDKvdIB28t1+l7QUlHaSGezz1fC+VPmkz3I2nZpirzRc6B8QoOGHdP7M5po9sApfCmjAB/gJBe9n2mDzZDOTheKjGvfIS32r2x/kR6UdY/WuTGP/OelGlZTfVaKH9ozM9XA+KaPag3TsA';
 const $ = (id) => document.getElementById(id);
 const EN_FAZLA_IZLEYICI = 4;                 // host ile birlikte 5 kisi
 const HOST_MU = new URLSearchParams(location.search).has('host');
@@ -693,6 +695,7 @@ const TEPKI = {
   nya: { yazi: 'nyaa~ 🐱', renk: '#ff5fa8' },
   eyes: { yazi: '👀', renk: '#39c5bb' },
   skull: { yazi: '💀', renk: '#fbeef5' },
+  skip: { yazi: 'SKIP 😳', renk: '#ffd23f' },
 };
 function ucur(yazi, renk, boy) {
   const u = document.createElement('div');
@@ -724,6 +727,11 @@ function tepkiOyna(t, kim) {
     if (!ebeveyn) phonkCal();
   } else if (t === 'catboy') {
     kediKulak = Date.now() + 60000;
+  } else if (t === 'skip') {
+    // Tuhaf sahne: herkes gorur; film hostun sekmesinde oldugu icin ileri
+    // sarmayi o yapar, ona ayrica sohbette uyari duser.
+    efekt('koca uyari', '😳 AWKWARD SCENE DETECTED\nskipping… 💀', 2600);
+    if (HOST_MU) mesajEkle({ tur: 'sistem', alarm: true, metin: `⏩ ${kim || 'someone'} wants to skip. fast-forward the movie!` });
   }
   const iri = t === 'skull' || t === 'eyes';
   ucur(kim ? `${tk.yazi}  ·  ${kim}` : tk.yazi, tk.renk, iri ? 38 : 20);

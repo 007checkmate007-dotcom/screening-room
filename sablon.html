@@ -112,10 +112,11 @@
   .tepki.cigilik { color: #ff6b7a; }
   .tepki.phonk { color: #c58bff; border-color: #7b4bb055; }
   .tepki.mikub { color: var(--miku); }
+  .tepki.atla { color: #ffd23f; border-color: #ffd23f55; }
 
   .ucan { position: absolute; bottom: 10%; z-index: 5; pointer-events: none; font-weight: 800; white-space: nowrap; animation: uc 2.6s ease-out forwards; text-shadow: 0 2px 10px #000a; }
   @keyframes uc { 0% { transform: translateY(0) scale(.6); opacity: 0; } 12% { opacity: 1; transform: translateY(-20px) scale(1.15); } 100% { transform: translateY(-260px) scale(1); opacity: 0; } }
-  .koca { position: absolute; inset: 0; z-index: 6; display: grid; place-items: center; text-align: center; pointer-events: none; font-weight: 800; animation: koca 1s ease-out forwards; }
+  .koca { position: absolute; inset: 0; z-index: 6; display: grid; place-items: center; text-align: center; pointer-events: none; font-weight: 800; white-space: pre-line; line-height: 1.1; animation: koca 1s ease-out forwards; }
   .koca.ciglik { font-size: min(18vw, 160px); color: #ff3b5c; text-shadow: 0 0 40px #ff3b5c; }
   .koca.phonkyazi { white-space: pre-line; line-height: 1; font-size: min(11vw, 96px); color: #c58bff; text-shadow: 0 0 30px #8a3cff; animation-duration: 2.8s; }
   .koca.uyari { font-size: min(7vw, 52px); color: #ffd23f; text-shadow: 0 0 24px #ff3b5c; animation-duration: 2.2s; }
@@ -211,6 +212,7 @@
       <button class="tepki" data-t="nya">nyaa~</button>
       <button class="tepki" data-t="eyes">👀</button>
       <button class="tepki" data-t="skull">💀</button>
+      <button class="tepki atla" data-t="skip">SKIP 😳</button>
     </div>
   </div>
   <aside class="sohbet">
@@ -693,6 +695,7 @@ const TEPKI = {
   nya: { yazi: 'nyaa~ 🐱', renk: '#ff5fa8' },
   eyes: { yazi: '👀', renk: '#39c5bb' },
   skull: { yazi: '💀', renk: '#fbeef5' },
+  skip: { yazi: 'SKIP 😳', renk: '#ffd23f' },
 };
 function ucur(yazi, renk, boy) {
   const u = document.createElement('div');
@@ -724,6 +727,11 @@ function tepkiOyna(t, kim) {
     if (!ebeveyn) phonkCal();
   } else if (t === 'catboy') {
     kediKulak = Date.now() + 60000;
+  } else if (t === 'skip') {
+    // Tuhaf sahne: herkes gorur; film hostun sekmesinde oldugu icin ileri
+    // sarmayi o yapar, ona ayrica sohbette uyari duser.
+    efekt('koca uyari', '😳 AWKWARD SCENE DETECTED\nskipping… 💀', 2600);
+    if (HOST_MU) mesajEkle({ tur: 'sistem', alarm: true, metin: `⏩ ${kim || 'someone'} wants to skip. fast-forward the movie!` });
   }
   const iri = t === 'skull' || t === 'eyes';
   ucur(kim ? `${tk.yazi}  ·  ${kim}` : tk.yazi, tk.renk, iri ? 38 : 20);
