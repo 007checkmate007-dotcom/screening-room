@@ -132,6 +132,13 @@
   .sohbet-bas { padding: 12px 16px; border-bottom: 1px solid var(--kenar); }
   .sohbet-bas .ust { display: flex; align-items: center; gap: 8px; }
   .sohbet-bas b { color: var(--pembe); }
+  .sohbet-kapat { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--kenar); background: var(--yuzey2); color: var(--metin); cursor: pointer; font-size: 14px; line-height: 1; padding: 0; }
+  .istatistik { font-size: 12px; color: var(--soluk); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 1em; }
+  /* Sohbet gizlenince film tum genisligi alir; 💬 ile geri gelir. */
+  .oda.sohbet-gizli:not(.tiyatro) { grid-template-columns: minmax(0, 1fr); }
+  .oda.sohbet-gizli:not(.tiyatro) .sohbet { display: none; }
+  .oda.sohbet-gizli:not(.tiyatro) .yuzen { display: flex; position: absolute; }
+  .oda.tiyatro .istatistik { display: none; }
   .kisiler, .skor { font-size: 12px; color: var(--soluk); }
   .skor { color: #ffd23f; margin-top: 2px; min-height: 1em; }
   .mesajlar { flex: 1; overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 9px; min-height: 0; }
@@ -198,7 +205,7 @@
 
   /* ---------- parents mode (yalnizca host): simsiyah, sadece paylasilan ekran */
   body.ebeveyn { background: #000; }
-  body.ebeveyn .arka, body.ebeveyn .sohbet, body.ebeveyn .bas, body.ebeveyn .tepkiler,
+  body.ebeveyn .arka, body.ebeveyn .sohbet, body.ebeveyn .bas, body.ebeveyn .tepkiler, body.ebeveyn .istatistik,
   body.ebeveyn .ucan, body.ebeveyn .koca, body.ebeveyn .yuzen, body.ebeveyn .tost, body.ebeveyn .yuruyen-kedi, body.ebeveyn .kosan, body.ebeveyn .bekle { display: none !important; }
   body.ebeveyn .oda { grid-template-columns: 1fr; }
   body.ebeveyn .sahne-kap { padding: 0; }
@@ -227,10 +234,11 @@
       <span class="bosluk"></span>
       <button class="dugme gizli" id="yayinla">Start the movie</button>
       <button class="dugme ikincil gizli" id="durdur">Stop</button>
-      <button class="dugme ikincil gizli" id="kalite" title="Freezing? Lower it">Quality: HD 60fps</button>
+      <button class="dugme ikincil gizli" id="kalite" title="Auto adjusts to the connection; click to force a level">Quality: Auto</button>
       <button class="dugme ikincil gizli" id="ebeveyn" title="Shortcut: P">Parents mode</button>
       <button class="dugme ikincil" id="tamekran">Fullscreen</button>
     </div>
+    <div class="istatistik gizli" id="istatistik"></div>
     <div class="sahne" id="sahne">
       <video id="video" playsinline autoplay></video>
       <div class="bekle" id="bekle"><div id="bekle-icerik"></div></div>
@@ -254,7 +262,7 @@
   </div>
   <aside class="sohbet">
     <div class="sohbet-bas">
-      <div class="ust"><b>chat</b><span class="bosluk"></span><span class="kisiler" id="kisiler"></span></div>
+      <div class="ust"><b>chat</b><span class="bosluk"></span><span class="kisiler" id="kisiler"></span><button class="sohbet-kapat" id="sohbet-kapat" aria-label="Hide chat" title="Hide chat">✕</button></div>
       <div class="skor" id="skor"></div>
     </div>
     <div class="mesajlar" id="mesajlar"></div>
@@ -280,7 +288,7 @@
 // anahtardan turetiliyor. Uretim: node kur.mjs
 'use strict';
 
-const PAKET = 'JPrmcSSxM9Fuen4F93VyTLN8TWX7Mr0saoelQvM+FEM7z8Dptrky/GrQGU32yyKFZhtMfGflofso+bluOQQyUEGZmDx2KNcRfxlEa6s+ITVDICO/qzeip3VHSlfhCEmH60jZTDnoO5uS0DO94etO0a8XnoPhCyrBdAi4ddbxQpEpbPjM8bgY0oofe7aWiYRNfoTD22LxvDU9zYIoAl/dF1rTElrvAose0j3X5tyRmXBG8TNbrNTAjsTH9BfnNGdYYxsjVP4XQwjMSIlU02rqTEEpE7AgQfzbmPVFVlIJ5jMWUmlsKtNi6ZyuPE72Qn+j+6TOd/eP5znrkk+xs9PCPYeeQ4PYvvRN0lMGngPWnh45TUSmQKqSQVtX1PxIiZkBtYHtd5WiuyCpO3gQHF/EnGKA89vswpBxHjycEV1fc3rTTvS5nDrdhtP8k3Keyr9jc0HNbG+krZo8TRXclSFLIoG3/EY0lXDp//tALU00CroUUP+/eTs9TzFJLdbaY760GjpX0Xmu7SNxblOyXR1/1obnvozN0R9yn2TApxad56xUyJl9isoQw/yRUJqXJu+gOKJY0UT1erkg3b43qjbmqMltUOfKwbJBgK/BupKB6CETeroIdJ2IS9/zvUXiAJBZwY6ZM2eGJchu6iCgV0L2d5+QP9BxAE8A+zR0HkEFjThwfDPGJ6+03zn2FbSGklP47FGSeoa6BVZygFycgJMgbEPkrIA6QMf/CPjZtr1srnA6Mfetl7Lt9givQdMOQHG3dTuo3OyWAh/+jS22L0tpCKeuZTZzMzs52HsYy93ibzfuDxUQvcTH77uZyiPk1GprMvI9S668O+ISjOOLP3kGibukxxBobunRlU0xwMUepWt7MjqubrRB5NA/+hOj29iFE706xR8U3LTxDw0uMU6LiWNkjyVHNjBbjMswgneaXlDrRkmgVBcgRm7EZILFXSEA4D12dHgngeDY4dXnYLAi0L0cJUXHJZSXaFhOY4C1BJPaUWHwW4DFFAa8fO6e96fPEnNS6b8fDDwwjdAk6dUEruUPwWbO161uMiL5L5z7zk8HDY73Qqfz52QFDMFi9KMNRPGrrLaOlebAQTYUu2PZwVkctzoH2E6XtneZKXW5BzzylEd+s3VKA3bn9NsICgs/wUA2serXtZ6Gu9G3olMe+RQGsjLg9sFvQ7uelK1o5OMYnrPMadJ7WyzcbbmCW3WtQ0GbKwzKhIh8x3DsM5rT3YmYYQnc0uFcFmdEREL1Kt729Q4efn/0xsg6AVeOWISC8urJvkrzle6g/CvTuBDViuvQd0mq7KOYHTMVyZOUTRwO1EbirdZ0lYYDyzoqvE9LVv5yR4T1pTLQdJKrdOqH0zMzILqJnBhf+pSaTWAi8jVofNmbwaZK0JIEnHATIXJN3lP4k7s8iq81ejaXvgavHlaeK0szMuJ1T6BCIM6T96wUU8TjY72uMW2zdsMaJzn46P9QbapY5mscdoVmQRQ+rbMcm49K+lX9D+13lF0gYtRtZcUbGP3Fs6UIKRvuzsbPZBvoAjMYNp3nNEB+x0WlptGfDG7o7tzjc8alhGsjmyCVsfJny9hgsaJm2d1hDuUYin0oTI7cUupKo8a2kpcTMbVr/rdMKWytPpuQJlzPAMXch249X55oYwW8gK4+1cF0zyMwmyOJET4qTWXCNBdfd8s1lnELX6G8g9s+5ix/Og6Lbzx0SmnCJj7KLGqMtzA0dXqD5ZFSIotqcop1oB1ypSC0Nd8fZBamjjw7vHRd';
+const PAKET = 'sl+7nAkwYWhWDZnS1E47sa7XsnU/yQWtL/i+SXXDFkSmeaSta5S0NGQBUf0Kubq670rkjqyD4vAW7HBEGwHCf3ioP6yqBslVk9Fma8PJl1qxiLccacjZAcVZM7RTpWstT5mMeIm71DuTpZ5P+e1oLa9VKzjK5tnjMoRJlKtVcgWN5lCvVpvLgNwBYwSMnQDykUSXBzljBxcetPbTdV1gM6ALaE7o1FWJFS2Ec5aH7LxDzB7HXp8zeZgV9hbFQUzZstoZq1oSUkq9ScG3V0FS7o5cz4mgckzAAJx+cDRZgoAzmYcLlUAjAh/4FMD5NVx7WRiOmQj5+df7I/EnCKnpME1+wGi9bmqjeOVjBqMI57+JfQvuyOsjtTsZEvCYbrJKnzOqv9fxp63JCTkNPINDGMqvFBx9CMIUTTGVgvvMGy5jxbisYn1U/qzv14ZiQLVcfHFaH5J56CPS42wvqFuscZQIfSMfkSqQ1jwltMwEC9kEaLdTeeyHf9JbWOR0oaQGIN5HXCjD1clmEXW31SsetppsBzrgqT7wKhJthb+vf11V7h9kep2Gc+b1Y2hIE25SAASnOBxcb9ptvTTqH4ugrXqDxvENrddxQa7vFUmrArjMvkcrRaF/AFFxvb9s5krA+QGIc4Y/qMn8WVHfMCEp06KlTjJMLFTspXlg0y5Mdcfu+XIXRmrNfwJMGBnX/s89i3fv76hOjGJfIJ/HGkrKIOQptuXBx2hmdpnwfTHnDKPWROxPr7llMcvUC9qjKjv+lPOjwF8K/lPRDZlIkHLSI8LQsLtn/YX3YwBoeifTxidIIp5W8C2e5vIGLHaKk8jGHv1PuqMaZbNETm+R7PnX9QOEBOLMUhnNiu4EnJqGOnVrqd374ngy8HF7Qb4I2Zf1aZ1GSqU5GYAVC1952wH5Sur0Q2q16MalVAufI3Ch2+Naznmyf6U7/hmJjfMdiQmahWouy1dJuEyuMzlQsK2IOdHM2B31PMt6lSfLpjvI2a4qlQ+uKFh7Z45ar4FORfR49j2qCK95kyvaG9tgxgBA9e1x63UpbNjUkUXsz4TFWYHOWLDc2tr7lfNcNRXecv9D1yP1upLOV3KG70nQ3y2RdN0aAyl9jF1V0iGctawVQEr3xw0ff8ARsUzUTm5w2lJUa6bCpcOC9zl4zhQajRgTF0DkoNGB75zPhlRdU7RuHiMYIKTAFdIYWTN5xapCiX9JKkDC0ifd1Xkeh/tvcDqAHSKJ8j2OFF0HNsLcYoK0yUJqEujcFFrp+IH0zSSCoeRzNcEYebCqvSHF9p8HxNjbbp1Qv7NnAXzS/vqoJTQyZZM1l96skwv4/xabmUv2BPu5y+jFXcjOfwlCgfojit5wqvmPam2RXVbFKAb7invplQROwSYsslodEm3Kaq9fWpOqQr0IBeqtyW3VW2gzbDudNlQNJdkKUFqqaYf87nhw3vN5U1JeKwTM7qACWvpONlDx/Qqw3DKVSd6vt/Ru5KqIJhDsynisNJHYQO5dNjvanmtnAyWjcQk/8Hy5KYV2CK92RbRbzCiOQtuS3NML6Bg9cwONgxr7crOllsGFyJIrf+AGiN68maqRAHWjlKcrLyLpOtdAJ1ZJrUj31XAkU+q/UnkUN0eZdMFnjIVp6UJvgXJO1SZJnEsodbchf0zscdXq8awk6+o3FmY6V+saMaLl4X5ddRE3EDcxoEBBaquIJPBC7bnTIShfGgNGahKaJSuuyF2O2BRq/o0nbJ9pVVZcDx75GUtRj4+kduVqDifk';
 const $ = (id) => document.getElementById(id);
 const EN_FAZLA_IZLEYICI = 4;                 // host ile birlikte 5 kisi
 const HOST_MU = new URLSearchParams(location.search).has('host');
@@ -380,7 +388,8 @@ function mesajEkle(m) {
 let okunmamis = 0;
 function tostGoster(m) {
   const oda = $('oda');
-  if (!oda.classList.contains('tiyatro') || oda.classList.contains('sohbet-acik')) return;
+  const kapali = oda.classList.contains('tiyatro') ? !oda.classList.contains('sohbet-acik') : oda.classList.contains('sohbet-gizli');
+  if (!kapali) return;
   okunmamis++;
   $('okunmamis').textContent = okunmamis;
   $('okunmamis').classList.remove('gizli');
@@ -511,6 +520,8 @@ function hostBasla() {
   durum('opening the room…');
   $('ebeveyn').classList.remove('gizli');
   $('kalite').classList.remove('gizli');
+  $('istatistik').classList.remove('gizli');
+  setInterval(() => olcum().catch(() => {}), 2000);
   peer = new Peer(P.oda, AYAR);
   peer.on('open', () => {
     yenidenDeneme = 0;
@@ -671,42 +682,98 @@ function sdpDuzenle(sdp) {
   const mi = satir.findIndex((l) => l.startsWith('m=video'));
   if (mi >= 0) {
     const h264 = satir.map((l) => l.match(/^a=rtpmap:(\d+) H264\/90000/i)).filter(Boolean).map((m) => m[1]);
+    // High profil ayni bit hiziyla daha net; sonra Main, sonra Baseline.
+    const profil = (no) => {
+      const f = satir.find((l) => l.startsWith(`a=fmtp:${no} `)) || '';
+      const id = (f.match(/profile-level-id=([0-9a-f]{6})/i) || [])[1] || '';
+      return (id.startsWith('64') ? 0 : id.startsWith('4d') ? 2 : 4) + (/packetization-mode=1/.test(f) ? 0 : 1);
+    };
+    h264.sort((a, b) => profil(a) - profil(b));
     const parca = satir[mi].split(' '), pt = parca.slice(3);
-    if (h264.length) satir[mi] = [...parca.slice(0, 3), ...pt.filter((x) => h264.includes(x)), ...pt.filter((x) => !h264.includes(x))].join(' ');
+    if (h264.length) satir[mi] = [...parca.slice(0, 3), ...h264.filter((x) => pt.includes(x)), ...pt.filter((x) => !h264.includes(x))].join(' ');
   }
   const opus = satir.map((l) => l.match(/^a=rtpmap:(\d+) opus\/48000/i)).find(Boolean);
   if (opus) {
     const fi = satir.findIndex((l) => l.startsWith(`a=fmtp:${opus[1]} `));
-    if (fi >= 0 && !/stereo=1/.test(satir[fi])) satir[fi] += ';stereo=1;sprop-stereo=1;maxaveragebitrate=128000';
+    if (fi >= 0 && !/stereo=1/.test(satir[fi])) satir[fi] += ';stereo=1;sprop-stereo=1;maxaveragebitrate=96000';
   }
   return satir.join('\r\n');
 }
 
 // Kalite: donma olursa host film durmadan dusurur (cozunurluk ve bit hizi).
-// HD 60 kare (urun sahibi istedi); donarsa 30 kareye ve daha dusuk cozunurluge iner.
+// Seviyeler: HD 60 kare (urun sahibi istedi), 30 kare, dusuk cozunurluk.
 const KALITE = [
   { ad: 'HD 60fps', olcek: 1, bit: 5000000, kare: 60 },
   { ad: 'Smooth 30fps', olcek: 1, bit: 2500000, kare: 30 },
   { ad: 'Max smooth', olcek: 1.5, bit: 1200000, kare: 30 },
 ];
-let kalite = 0;
-function kaliteUygula(pc) {
+// Mod 0 = Auto: her izleyici icin ayri, baglantiya gore. 30 karede baslar,
+// 20 sn temiz giderse 60'a cikar; kayip ya da tikanma gorunce iner.
+// Ses bozulmasi, bulaniklik ve sohbetin gec gelmesi ayni tikanmanin
+// belirtileriydi (Lucy, 31 Ekim 2026).
+const MODLAR = ['Auto', ...KALITE.map((k) => k.ad)];
+let mod = 0;
+function kaliteUygula(pc, seviye) {
+  const q = KALITE[seviye];
   for (const s of pc.getSenders()) {
-    if (!s.track || s.track.kind !== 'video') continue;
+    if (!s.track) continue;
     const p = s.getParameters();
     if (!p.encodings || !p.encodings.length) p.encodings = [{}];
-    p.encodings[0].maxBitrate = KALITE[kalite].bit;
-    p.encodings[0].maxFramerate = KALITE[kalite].kare;
-    p.encodings[0].scaleResolutionDownBy = KALITE[kalite].olcek;
+    if (s.track.kind === 'audio') {
+      // Tikanmada once goruntu kisilsin, ses bozulmasin.
+      p.encodings[0].priority = 'high'; p.encodings[0].networkPriority = 'high';
+      s.setParameters(p).catch(() => {});
+      continue;
+    }
+    p.encodings[0].maxBitrate = q.bit;
+    p.encodings[0].maxFramerate = q.kare;
+    p.encodings[0].scaleResolutionDownBy = q.olcek;
     p.degradationPreference = 'balanced';
     s.setParameters(p).catch(() => {});
   }
 }
 $('kalite').onclick = () => {
-  kalite = (kalite + 1) % KALITE.length;
-  $('kalite').textContent = `Quality: ${KALITE[kalite].ad}`;
-  for (const k of izleyiciler.values()) if (k.call && k.call.peerConnection) kaliteUygula(k.call.peerConnection);
+  mod = (mod + 1) % MODLAR.length;
+  $('kalite').textContent = `Quality: ${MODLAR[mod]}`;
+  for (const k of izleyiciler.values()) {
+    k.seviye = mod ? mod - 1 : 1; k.iyi = 0; k.kotu = 0;
+    if (k.call && k.call.peerConnection) kaliteUygula(k.call.peerConnection, k.seviye);
+  }
 };
+
+function otoAyarla(k, pc, kayip, neden, fps) {
+  const kotu = kayip > .04 || (neden !== 'none' && fps < KALITE[k.seviye].kare * .7);
+  if (kotu) { k.kotu++; k.iyi = 0; } else if (kayip < .01 && neden === 'none') { k.iyi++; k.kotu = 0; }
+  if (k.kotu >= 2 && k.seviye < KALITE.length - 1) {
+    k.seviye++; k.kotu = 0; k.iyiGerek = Math.min((k.iyiGerek || 10) * 2, 90); kaliteUygula(pc, k.seviye);
+  } else if (k.iyi >= (k.iyiGerek || 10) && k.seviye > 0) { k.seviye--; k.iyi = 0; kaliteUygula(pc, k.seviye); }
+}
+
+/// Her 2 sn: izleyici basina cozunurluk, kare, hiz, ping, kayip ve kaliteyi
+/// neyin tuttugu (internet mi bilgisayar mi). Otomatik mod buna gore ayarlar.
+async function olcum() {
+  const satirlar = [];
+  for (const k of izleyiciler.values()) {
+    const pc = k.call && k.call.peerConnection;
+    if (!pc || pc.connectionState !== 'connected') continue;
+    let out = null, uzak = null;
+    (await pc.getStats()).forEach((r) => {
+      if (r.kind !== 'video') return;
+      if (r.type === 'outbound-rtp') out = r;
+      if (r.type === 'remote-inbound-rtp') uzak = r;
+    });
+    if (!out) continue;
+    const mbps = k.oncekiBayt != null ? (out.bytesSent - k.oncekiBayt) * 8 / (out.timestamp - k.oncekiZaman) / 1000 : 0;
+    k.oncekiBayt = out.bytesSent; k.oncekiZaman = out.timestamp;
+    const kayip = (uzak && uzak.fractionLost) || 0, ping = uzak && uzak.roundTripTime ? Math.round(uzak.roundTripTime * 1000) : '?';
+    const neden = out.qualityLimitationReason || 'none', fps = out.framesPerSecond || 0;
+    if (!mod && Date.now() - (k.baslangic || 0) > 8000) otoAyarla(k, pc, kayip, neden, fps);
+    const sebep = { bandwidth: 'your internet', cpu: 'your computer' }[neden];
+    satirlar.push(`${k.ad || 'viewer'}: ${out.frameHeight || '?'}p${Math.round(fps)} · ${mbps.toFixed(1)} Mbps · ping ${ping} ms · loss ${(kayip * 100).toFixed(1)}%`
+      + (sebep ? ` · held back by ${sebep}` : ''));
+  }
+  $('istatistik').textContent = akis ? satirlar.join('   |   ') : '';
+}
 
 function cagir(id) {
   const k = izleyiciler.get(id);
@@ -714,8 +781,11 @@ function cagir(id) {
   try { k.call && k.call.close(); } catch (_) {}
   const call = peer.call(id, akis, { sdpTransform: sdpDuzenle });
   k.call = call;
+  k.seviye = mod ? mod - 1 : 1; k.iyi = 0; k.kotu = 0; k.oncekiBayt = null;
   const pc = call.peerConnection;
-  if (pc) pc.addEventListener('connectionstatechange', () => { if (pc.connectionState === 'connected') kaliteUygula(pc); });
+  if (pc) pc.addEventListener('connectionstatechange', () => {
+    if (pc.connectionState === 'connected') { k.baslangic = Date.now(); kaliteUygula(pc, k.seviye); }
+  });
 }
 
 /// Parents mode: yalnizca hostun ekraninda; simsiyah, sadece paylasilan ekran.
@@ -751,10 +821,12 @@ function izleyiciBasla() {
     call.answer(undefined, { sdpTransform: sdpDuzenle });
     call.on('stream', (s) => {
       // Uzak baglantidaki kucuk gecikmeler donma olarak gorunmesin: yarim saniyelik tampon.
+      // Yalnizca goruntuye: sese uygulaninca sesi gerdirip bozuyordu.
       for (const r of call.peerConnection.getReceivers()) {
+        if (!r.track || r.track.kind !== 'video') continue;
         try {
-          if ('jitterBufferTarget' in r) r.jitterBufferTarget = 500;
-          else if ('playoutDelayHint' in r) r.playoutDelayHint = .5;
+          if ('jitterBufferTarget' in r) r.jitterBufferTarget = 800;
+          else if ('playoutDelayHint' in r) r.playoutDelayHint = .8;
         } catch (_) {}
       }
       const v = $('video');
@@ -980,7 +1052,7 @@ function tiyatroGuncelle() {
   const ac = !!document.fullscreenElement || elleTiyatro || yanEkran.matches;
   $('oda').classList.toggle('tiyatro', ac);
   if (!ac) $('oda').classList.remove('sohbet-acik');
-  $('tiyatro-cik').classList.toggle('gizli', yanEkran.matches && !document.fullscreenElement && !elleTiyatro);
+  $('tiyatro-cik').classList.toggle('gizli', !document.fullscreenElement && !elleTiyatro);
 }
 yanEkran.addEventListener('change', tiyatroGuncelle);
 $('tamekran').onclick = async () => {
@@ -996,9 +1068,21 @@ $('tiyatro-cik').onclick = async () => {
   elleTiyatro = false;
   tiyatroGuncelle();
 };
+function okunmamisSifirla() {
+  okunmamis = 0;
+  $('okunmamis').classList.add('gizli');
+  const k = $('mesajlar'); k.scrollTop = k.scrollHeight;
+}
 $('sohbet-ac').onclick = () => {
-  const acik = $('oda').classList.toggle('sohbet-acik');
-  if (acik) { okunmamis = 0; $('okunmamis').classList.add('gizli'); const k = $('mesajlar'); k.scrollTop = k.scrollHeight; }
+  const oda = $('oda');
+  if (!oda.classList.contains('tiyatro')) { oda.classList.remove('sohbet-gizli'); okunmamisSifirla(); return; }
+  if (oda.classList.toggle('sohbet-acik')) okunmamisSifirla();
+};
+// Sohbet her ekranda kapatilabilir (Lucy: "chat ekrani kapatiyordu, kaldiramadim").
+$('sohbet-kapat').onclick = () => {
+  const oda = $('oda');
+  if (oda.classList.contains('tiyatro')) oda.classList.remove('sohbet-acik');
+  else oda.classList.add('sohbet-gizli');
 };
 document.addEventListener('fullscreenchange', tiyatroGuncelle);
 
