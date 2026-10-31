@@ -227,7 +227,7 @@
       <span class="bosluk"></span>
       <button class="dugme gizli" id="yayinla">Start the movie</button>
       <button class="dugme ikincil gizli" id="durdur">Stop</button>
-      <button class="dugme ikincil gizli" id="kalite" title="Freezing? Lower it">Quality: HD</button>
+      <button class="dugme ikincil gizli" id="kalite" title="Freezing? Lower it">Quality: HD 60fps</button>
       <button class="dugme ikincil gizli" id="ebeveyn" title="Shortcut: P">Parents mode</button>
       <button class="dugme ikincil" id="tamekran">Fullscreen</button>
     </div>
@@ -627,7 +627,7 @@ async function yayinBaslat() {
   try {
     akis = await navigator.mediaDevices.getDisplayMedia({
       // 720p: Turkiye-ABD gibi uzak baglantida 1080p surekli takiliyordu.
-      video: { frameRate: { ideal: 30, max: 30 }, width: { ideal: 1280, max: 1280 }, height: { ideal: 720, max: 720 } },
+      video: { frameRate: { ideal: 60, max: 60 }, width: { ideal: 1280, max: 1280 }, height: { ideal: 720, max: 720 } },
       // Film sesi: yanki ve gurultu suzgecleri muzigi bozar, kapali.
       audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
       preferCurrentTab: false, selfBrowserSurface: 'exclude', surfaceSwitching: 'include', systemAudio: 'include',
@@ -683,10 +683,11 @@ function sdpDuzenle(sdp) {
 }
 
 // Kalite: donma olursa host film durmadan dusurur (cozunurluk ve bit hizi).
+// HD 60 kare (urun sahibi istedi); donarsa 30 kareye ve daha dusuk cozunurluge iner.
 const KALITE = [
-  { ad: 'HD', olcek: 1, bit: 3500000 },
-  { ad: 'Smooth', olcek: 1.5, bit: 1800000 },
-  { ad: 'Max smooth', olcek: 2, bit: 1000000 },
+  { ad: 'HD 60fps', olcek: 1, bit: 5000000, kare: 60 },
+  { ad: 'Smooth 30fps', olcek: 1, bit: 2500000, kare: 30 },
+  { ad: 'Max smooth', olcek: 1.5, bit: 1200000, kare: 30 },
 ];
 let kalite = 0;
 function kaliteUygula(pc) {
@@ -695,7 +696,7 @@ function kaliteUygula(pc) {
     const p = s.getParameters();
     if (!p.encodings || !p.encodings.length) p.encodings = [{}];
     p.encodings[0].maxBitrate = KALITE[kalite].bit;
-    p.encodings[0].maxFramerate = 30;
+    p.encodings[0].maxFramerate = KALITE[kalite].kare;
     p.encodings[0].scaleResolutionDownBy = KALITE[kalite].olcek;
     p.degradationPreference = 'balanced';
     s.setParameters(p).catch(() => {});

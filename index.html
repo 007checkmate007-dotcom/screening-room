@@ -227,7 +227,7 @@
       <span class="bosluk"></span>
       <button class="dugme gizli" id="yayinla">Start the movie</button>
       <button class="dugme ikincil gizli" id="durdur">Stop</button>
-      <button class="dugme ikincil gizli" id="kalite" title="Freezing? Lower it">Quality: HD</button>
+      <button class="dugme ikincil gizli" id="kalite" title="Freezing? Lower it">Quality: HD 60fps</button>
       <button class="dugme ikincil gizli" id="ebeveyn" title="Shortcut: P">Parents mode</button>
       <button class="dugme ikincil" id="tamekran">Fullscreen</button>
     </div>
@@ -280,7 +280,7 @@
 // anahtardan turetiliyor. Uretim: node kur.mjs
 'use strict';
 
-const PAKET = 'Ns7BM1YdmtgxCinHT0MLcMAefwMdn1faQwreaYyCv4ik6R3sUE2XN2bTdDhBVIoDqwNmj9gqF7FhkMdVGIGvzt13bfDGBJWqtKsv/PnzIA4VYha5T83520t4FQQvD+skVWyVnY0IKtnb8wXySq5rA5AezXPqzDsuSPfoMSVUwPCR8EoeWVUhJsN+IAtyuzJlmGHPlpixCoLmHLCxWraYpMRONyOHpaB2Q9zK7CPlpoy38njADryZGT7/iMkXNAjALerhdNOiECklNElvk0TC1ihFlCs85JnpvquHTAmy/O30qR9MU+sUskrZ/YZe9JsQ4kD5FVJknV3k2F/RWA7PRdWx3sEEyJmlD75W2Ndt0CQ9UmqDQEyzUn/x1NwZyJXx9P+9Uakz5qnkiwaKzX2Oymqo8zbf3/urYlozqObe/d9yYrMzawxc/PulOIGN5tv+5Uw3cpekJAD4xW0dWxdmnAoCgTVNYWc1OCIl2mldveKhUWihkzXfKOrZivqZ7E2b5UNod92hIlJ/kb73f+rn/4rX5n1TgI8kNZZfh7N7i/JevATDiDpbP8x90pdaQ4U9RDBVIi7TFpjebgFvQYcRzXfJIDPD4rqtaveGZaI29jDn8KDOtAkmi1T1j8pi+n/+NBT8/DMIXZxDJNbF1HGej6KmwYCYB0a+jde2gGN46xa83jN9TbJJT4D2dJwMxyoEA6gy5tfNd7Q+PRNXC2Cqr01E/IHYrREHcjqh+EA74qTJsOeqAnMUr0b3bQatZ6ffgY7xs74xL7YTf0gBD0h+U82oAqy2WGXkEHALB/2G4G8vms/P0lawEkRW3e/Af2bD72EpBSskNlz4WLLJ5fPquTOXPyOQ7PwDZWi/oSxeIj8SM3ZR+YnfLzybFwBrz79V6JdH26ViEyJMiExyoH0avOYFTd4WmRPUh6UkDDYuN4/Va/9/M+gmRvL9qRPK9X4ZgTeFlRaIZnKM1G04IZHETQKdNm32bPhXTQFpYdIg2Iv2aNnV3PXKaU88Cd7hSCjjoe692HyWaF9R/QLvmT7GFDAlqIX0dr/XBP8s9BBe+WD/y1e2zXWwdp4TuB95YGPpKQBcEjhHzdrgv/Woez/RNjHOd+Lb8TgDM46BwITza66OS/e2yAXen24ZWp8aV9QOw+PFf6D7QeOFqIa1Q+Oo5Qpu86Oj7OUerVlHOvPeFtWCi6avReGL7zLhsQORsJOfTcjS769M5F9HNchl5EWQUovQE5DbuFwAYNRCfK1S5oHs88ht0nxIWqPdMKZQYh60gC0CRzvNwuMHSbjXSDRJlVBtGTglo2cucw/hUGCPdNLTkcRpMAL8Qxj73gOSeQuGz7tz6s5SYHQtA6E7vyggWYCp32Rz9Q+N2ONs59l1lQ9LFbj0Y+YMaz0/5C4SnzwUYD2i1xVvN1JoeSTYQKAGORm2uqIiyhDsP2L2kQGBjnd6/qdi1aa01d9a7/reiNEel/jIyndAcLe8bl/OmjrReZ36oQo29g/D+97emRzqwX/sa4neAnbnKQEhGS73XFyPatkYpHXD5zL9wOKJGpIKBDi81EwMcq4CoSZShWcKTxn9/bLnv/ORTW2t7mVOVUOBI6GIvt1n5xC5BosNg4Wr+ZZ0gzmd5G+gEY5eYLLuD/uJgqc3OkwasBfh3J+5Da23r94JFKiHCTjSXcOAeegk8XqorUSlX6zC9BGmUyJGJ70aKRv2/P0nIGQk/7iwEi5ia2yTDFCZNuIcEhjDgJGl/n/7NxkgFWdx/gGkp47Y';
+const PAKET = 'JPrmcSSxM9Fuen4F93VyTLN8TWX7Mr0saoelQvM+FEM7z8Dptrky/GrQGU32yyKFZhtMfGflofso+bluOQQyUEGZmDx2KNcRfxlEa6s+ITVDICO/qzeip3VHSlfhCEmH60jZTDnoO5uS0DO94etO0a8XnoPhCyrBdAi4ddbxQpEpbPjM8bgY0oofe7aWiYRNfoTD22LxvDU9zYIoAl/dF1rTElrvAose0j3X5tyRmXBG8TNbrNTAjsTH9BfnNGdYYxsjVP4XQwjMSIlU02rqTEEpE7AgQfzbmPVFVlIJ5jMWUmlsKtNi6ZyuPE72Qn+j+6TOd/eP5znrkk+xs9PCPYeeQ4PYvvRN0lMGngPWnh45TUSmQKqSQVtX1PxIiZkBtYHtd5WiuyCpO3gQHF/EnGKA89vswpBxHjycEV1fc3rTTvS5nDrdhtP8k3Keyr9jc0HNbG+krZo8TRXclSFLIoG3/EY0lXDp//tALU00CroUUP+/eTs9TzFJLdbaY760GjpX0Xmu7SNxblOyXR1/1obnvozN0R9yn2TApxad56xUyJl9isoQw/yRUJqXJu+gOKJY0UT1erkg3b43qjbmqMltUOfKwbJBgK/BupKB6CETeroIdJ2IS9/zvUXiAJBZwY6ZM2eGJchu6iCgV0L2d5+QP9BxAE8A+zR0HkEFjThwfDPGJ6+03zn2FbSGklP47FGSeoa6BVZygFycgJMgbEPkrIA6QMf/CPjZtr1srnA6Mfetl7Lt9givQdMOQHG3dTuo3OyWAh/+jS22L0tpCKeuZTZzMzs52HsYy93ibzfuDxUQvcTH77uZyiPk1GprMvI9S668O+ISjOOLP3kGibukxxBobunRlU0xwMUepWt7MjqubrRB5NA/+hOj29iFE706xR8U3LTxDw0uMU6LiWNkjyVHNjBbjMswgneaXlDrRkmgVBcgRm7EZILFXSEA4D12dHgngeDY4dXnYLAi0L0cJUXHJZSXaFhOY4C1BJPaUWHwW4DFFAa8fO6e96fPEnNS6b8fDDwwjdAk6dUEruUPwWbO161uMiL5L5z7zk8HDY73Qqfz52QFDMFi9KMNRPGrrLaOlebAQTYUu2PZwVkctzoH2E6XtneZKXW5BzzylEd+s3VKA3bn9NsICgs/wUA2serXtZ6Gu9G3olMe+RQGsjLg9sFvQ7uelK1o5OMYnrPMadJ7WyzcbbmCW3WtQ0GbKwzKhIh8x3DsM5rT3YmYYQnc0uFcFmdEREL1Kt729Q4efn/0xsg6AVeOWISC8urJvkrzle6g/CvTuBDViuvQd0mq7KOYHTMVyZOUTRwO1EbirdZ0lYYDyzoqvE9LVv5yR4T1pTLQdJKrdOqH0zMzILqJnBhf+pSaTWAi8jVofNmbwaZK0JIEnHATIXJN3lP4k7s8iq81ejaXvgavHlaeK0szMuJ1T6BCIM6T96wUU8TjY72uMW2zdsMaJzn46P9QbapY5mscdoVmQRQ+rbMcm49K+lX9D+13lF0gYtRtZcUbGP3Fs6UIKRvuzsbPZBvoAjMYNp3nNEB+x0WlptGfDG7o7tzjc8alhGsjmyCVsfJny9hgsaJm2d1hDuUYin0oTI7cUupKo8a2kpcTMbVr/rdMKWytPpuQJlzPAMXch249X55oYwW8gK4+1cF0zyMwmyOJET4qTWXCNBdfd8s1lnELX6G8g9s+5ix/Og6Lbzx0SmnCJj7KLGqMtzA0dXqD5ZFSIotqcop1oB1ypSC0Nd8fZBamjjw7vHRd';
 const $ = (id) => document.getElementById(id);
 const EN_FAZLA_IZLEYICI = 4;                 // host ile birlikte 5 kisi
 const HOST_MU = new URLSearchParams(location.search).has('host');
@@ -627,7 +627,7 @@ async function yayinBaslat() {
   try {
     akis = await navigator.mediaDevices.getDisplayMedia({
       // 720p: Turkiye-ABD gibi uzak baglantida 1080p surekli takiliyordu.
-      video: { frameRate: { ideal: 30, max: 30 }, width: { ideal: 1280, max: 1280 }, height: { ideal: 720, max: 720 } },
+      video: { frameRate: { ideal: 60, max: 60 }, width: { ideal: 1280, max: 1280 }, height: { ideal: 720, max: 720 } },
       // Film sesi: yanki ve gurultu suzgecleri muzigi bozar, kapali.
       audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
       preferCurrentTab: false, selfBrowserSurface: 'exclude', surfaceSwitching: 'include', systemAudio: 'include',
@@ -683,10 +683,11 @@ function sdpDuzenle(sdp) {
 }
 
 // Kalite: donma olursa host film durmadan dusurur (cozunurluk ve bit hizi).
+// HD 60 kare (urun sahibi istedi); donarsa 30 kareye ve daha dusuk cozunurluge iner.
 const KALITE = [
-  { ad: 'HD', olcek: 1, bit: 3500000 },
-  { ad: 'Smooth', olcek: 1.5, bit: 1800000 },
-  { ad: 'Max smooth', olcek: 2, bit: 1000000 },
+  { ad: 'HD 60fps', olcek: 1, bit: 5000000, kare: 60 },
+  { ad: 'Smooth 30fps', olcek: 1, bit: 2500000, kare: 30 },
+  { ad: 'Max smooth', olcek: 1.5, bit: 1200000, kare: 30 },
 ];
 let kalite = 0;
 function kaliteUygula(pc) {
@@ -695,7 +696,7 @@ function kaliteUygula(pc) {
     const p = s.getParameters();
     if (!p.encodings || !p.encodings.length) p.encodings = [{}];
     p.encodings[0].maxBitrate = KALITE[kalite].bit;
-    p.encodings[0].maxFramerate = 30;
+    p.encodings[0].maxFramerate = KALITE[kalite].kare;
     p.encodings[0].scaleResolutionDownBy = KALITE[kalite].olcek;
     p.degradationPreference = 'balanced';
     s.setParameters(p).catch(() => {});
