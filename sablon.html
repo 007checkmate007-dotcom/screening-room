@@ -151,23 +151,55 @@
   .emojiler button { border: 0; background: none; font-size: 21px; padding: 4px; border-radius: 8px; cursor: pointer; transition: transform .12s; }
   .emojiler button:hover { background: var(--yuzey); transform: scale(1.2); }
 
+  /* Telefon ve dik tablet: ustte film, altinda tek satir tepki, kalan alanda sohbet. */
   @media (max-width: 820px) {
-    body { overflow: auto; }
-    .oda { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: auto; min-height: 100%; }
-    .sahne { flex: none; aspect-ratio: 16 / 9; }
-    .sohbet { border-left: 0; border-top: 1px solid var(--kenar); min-height: 50vh; }
+    .oda { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); height: 100dvh; }
+    .sahne-kap { padding: max(8px, env(safe-area-inset-top)) 8px 6px; gap: 8px; min-width: 0; }
+    .bas { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    .bas::-webkit-scrollbar, .tepkiler::-webkit-scrollbar { display: none; }
+    .bas > * { flex: none; }
+    .bas .bosluk { display: none; }
+    .logo { font-size: 17px; white-space: nowrap; }
+    .sahne { flex: none; aspect-ratio: 16 / 9; border-radius: 12px; }
+    .tepkiler { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    .tepki { flex: none; padding: 9px 14px; }
+    .sohbet { border-left: 0; border-top: 1px solid var(--kenar); min-height: 0; }
+    .yaz { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+    input[type=text] { font-size: 16px; }   /* iPhone yaziya basinca sayfayi buyutmesin */
+    .bekle h2 { font-size: 20px; }
+    .bekle .mektup { font-size: 13px; }
+    .kedi-buyuk { font-size: 40px; }
   }
-  .oda.tamekran { grid-template-columns: 1fr; }
-  .oda.tamekran .sahne-kap { padding: 0; }
-  .oda.tamekran .bas { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 6; }
-  .oda.tamekran .sahne { border-radius: 0; border: 0; }
-  .oda.tamekran .tepkiler { position: absolute; bottom: 12px; left: 12px; z-index: 6; }
-  .oda.tamekran .sohbet { position: fixed; right: 12px; bottom: 60px; width: 320px; height: 42%; border: 1px solid var(--kenar); border-radius: 16px; z-index: 6; }
+
+  /* Tiyatro: telefon yan cevrilince ya da Fullscreen'e basilinca. Film butun
+     ekrani kaplar; tepkiler altta yari saydam serit, sohbet sagdan acilir. */
+  .yuzen { position: fixed; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right)); z-index: 9; display: none; gap: 8px; }
+  .yuzen button { position: relative; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #ffffff33; background: #0009; color: #fff; font-size: 19px; cursor: pointer; }
+  .yuzen .rakam { position: absolute; top: -4px; right: -4px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px; background: var(--pembe); color: #2a0718; font-size: 11px; font-weight: 800; line-height: 19px; }
+  .tost { position: absolute; left: max(12px, env(safe-area-inset-left)); top: max(12px, env(safe-area-inset-top)); z-index: 7; max-width: 60%; padding: 8px 12px; border-radius: 12px; background: #000b; font-size: 14px; pointer-events: none; animation: tost 4.5s ease forwards; }
+  .tost b { color: var(--pembe); margin-right: 6px; }
+  @keyframes tost { 0% { transform: translateY(-8px); opacity: 0; } 8%, 85% { transform: none; opacity: 1; } 100% { opacity: 0; } }
+  .oda.tiyatro { grid-template-columns: minmax(0, 1fr); height: 100dvh; }
+  .oda.tiyatro .sahne-kap { padding: 0; }
+  .oda.tiyatro .bas { display: none; }
+  .oda.tiyatro .sahne { position: fixed; inset: 0; border-radius: 0; border: 0; aspect-ratio: auto; z-index: 2; }
+  .oda.tiyatro .yuzen { display: flex; }
+  .oda.tiyatro .tepkiler {
+    position: fixed; z-index: 7; left: 0; right: 0; bottom: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+    padding: 10px max(12px, env(safe-area-inset-left)) max(10px, env(safe-area-inset-bottom)); background: linear-gradient(#0000, #000a);
+  }
+  .oda.tiyatro .tepki { flex: none; background: #0008; border-color: #ffffff2a; padding: 7px 12px; }
+  .oda.tiyatro .sohbet {
+    position: fixed; z-index: 8; top: 0; right: 0; bottom: 0; width: min(42vw, 360px); border-left: 1px solid var(--kenar);
+    transform: translateX(105%); transition: transform .35s cubic-bezier(.2, 1, .3, 1); padding-right: env(safe-area-inset-right);
+  }
+  .oda.tiyatro.sohbet-acik .sohbet { transform: none; }
+  @media (max-width: 600px) { .oda.tiyatro .sohbet { width: 100vw; } }
 
   /* ---------- parents mode (yalnizca host): simsiyah, sadece paylasilan ekran */
   body.ebeveyn { background: #000; }
   body.ebeveyn .arka, body.ebeveyn .sohbet, body.ebeveyn .bas, body.ebeveyn .tepkiler,
-  body.ebeveyn .ucan, body.ebeveyn .koca, body.ebeveyn .yuruyen-kedi, body.ebeveyn .kosan, body.ebeveyn .bekle { display: none !important; }
+  body.ebeveyn .ucan, body.ebeveyn .koca, body.ebeveyn .yuzen, body.ebeveyn .tost, body.ebeveyn .yuruyen-kedi, body.ebeveyn .kosan, body.ebeveyn .bekle { display: none !important; }
   body.ebeveyn .oda { grid-template-columns: 1fr; }
   body.ebeveyn .sahne-kap { padding: 0; }
   body.ebeveyn .sahne { border: 0; border-radius: 0; box-shadow: none; animation: none !important; }
@@ -202,6 +234,10 @@
       <video id="video" playsinline autoplay></video>
       <div class="bekle" id="bekle"><div id="bekle-icerik"></div></div>
       <button class="dugme ses-ac gizli" id="ses-ac">Tap for sound</button>
+      <div class="yuzen">
+        <button id="sohbet-ac" aria-label="Chat">💬<span class="rakam gizli" id="okunmamis"></span></button>
+        <button id="tiyatro-cik" aria-label="Exit fullscreen">✕</button>
+      </div>
     </div>
     <div class="tepkiler" id="tepkiler">
       <button class="tepki cigilik" data-t="scream">AAAAA</button>
@@ -335,8 +371,25 @@ function mesajEkle(m) {
   const dipte = kutu.scrollHeight - kutu.scrollTop - kutu.clientHeight < 80;
   kutu.append(el);
   if (dipte) kutu.scrollTop = kutu.scrollHeight;
-  if (m.tur === 'mesaj') dedektor(m.metin);
+  if (m.tur === 'mesaj') { dedektor(m.metin); if (!m.ben) tostGoster(m); }
   return el;
+}
+
+/// Tiyatroda sohbet kapaliyken gelen mesaj filmin ustunde kisaca gorunur.
+let okunmamis = 0;
+function tostGoster(m) {
+  const oda = $('oda');
+  if (!oda.classList.contains('tiyatro') || oda.classList.contains('sohbet-acik')) return;
+  okunmamis++;
+  $('okunmamis').textContent = okunmamis;
+  $('okunmamis').classList.remove('gizli');
+  document.querySelectorAll('.tost').forEach((t) => t.remove());
+  const t = document.createElement('div');
+  t.className = 'tost';
+  const kim = document.createElement('b'); kim.textContent = m.ad === P.host ? hostAdi() : m.ad;
+  t.append(kim, m.metin);
+  $('sahne').append(t);
+  setTimeout(() => t.remove(), 4600);
 }
 
 /// Sohbette "chud" ve "tuff" gecince herkesin ekraninda (yerel, ayni anda).
@@ -435,6 +488,7 @@ function odaya() {
   $('film').textContent = `tonight: ${P.film} · halloween night`;
   saatleriGuncelle(); setInterval(saatleriGuncelle, 20000);
   emojileriKur();
+  tiyatroGuncelle();   // telefon zaten yan tutuluyorsa
   HOST_MU ? hostBasla() : izleyiciBasla();
   kediDongusu();
 }
@@ -664,10 +718,11 @@ function izleyiciBasla() {
       v.muted = false;
       bekleGizle();
       durum('LIVE', 'canli');
+      ekranUyanik(true);
       // Tarayici sesli oynatmaya izin vermezse sessiz baslat, "sesi ac" goster.
       v.play().catch(() => { v.muted = true; v.play().catch(() => {}); $('ses-ac').classList.remove('gizli'); });
     });
-    call.on('close', () => { durum('room active', 'aktif'); bekleGoster(BEKLEME()); });
+    call.on('close', () => { durum('room active', 'aktif'); bekleGoster(BEKLEME()); ekranUyanik(false); });
   });
   peer.on('error', (e) => {
     if (e.type === 'peer-unavailable') {
@@ -872,18 +927,52 @@ $('yaz').addEventListener('submit', (e) => {
   }
 });
 
+// Tiyatro: telefon yan cevrilince kendiliginden; Fullscreen dugmesiyle elle.
+// iPhone'da gercek tam ekran yalnizca videoyu gosteriyor (efekt ve sohbet
+// kayboluyordu): orada tam ekran yerine ayni gorunum sayfanin icinde.
+const yanEkran = matchMedia('(orientation: landscape) and (max-height: 520px)');
+let elleTiyatro = false;
+function tiyatroGuncelle() {
+  const ac = !!document.fullscreenElement || elleTiyatro || yanEkran.matches;
+  $('oda').classList.toggle('tiyatro', ac);
+  if (!ac) $('oda').classList.remove('sohbet-acik');
+  $('tiyatro-cik').classList.toggle('gizli', yanEkran.matches && !document.fullscreenElement && !elleTiyatro);
+}
+yanEkran.addEventListener('change', tiyatroGuncelle);
 $('tamekran').onclick = async () => {
-  if (document.fullscreenElement) { await document.exitFullscreen(); return; }
-  try { await $('oda').requestFullscreen(); }
-  catch (_) {
-    // iPhone Safari: yalnizca video tam ekran olabiliyor.
-    const v = $('video'); if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+  const oda = $('oda');
+  if (oda.requestFullscreen && document.fullscreenEnabled) {
+    try { await oda.requestFullscreen(); return; } catch (_) {}
   }
+  elleTiyatro = true;
+  tiyatroGuncelle();
 };
-document.addEventListener('fullscreenchange', () => {
-  const tam = !!document.fullscreenElement;
-  $('oda').classList.toggle('tamekran', tam);
-  $('tamekran').textContent = tam ? 'Exit fullscreen' : 'Fullscreen';
+$('tiyatro-cik').onclick = async () => {
+  if (document.fullscreenElement) await document.exitFullscreen();
+  elleTiyatro = false;
+  tiyatroGuncelle();
+};
+$('sohbet-ac').onclick = () => {
+  const acik = $('oda').classList.toggle('sohbet-acik');
+  if (acik) { okunmamis = 0; $('okunmamis').classList.add('gizli'); const k = $('mesajlar'); k.scrollTop = k.scrollHeight; }
+};
+document.addEventListener('fullscreenchange', tiyatroGuncelle);
+
+// Film sirasinda telefonun ekrani kararmasin.
+let uyanik = null;
+async function ekranUyanik(ac) {
+  try {
+    if (ac && !uyanik && 'wakeLock' in navigator) {
+      uyanik = await navigator.wakeLock.request('screen');
+      uyanik.addEventListener('release', () => { uyanik = null; });
+    } else if (!ac && uyanik) {
+      await uyanik.release();
+      uyanik = null;
+    }
+  } catch (_) {}
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && $('video').srcObject) ekranUyanik(true);
 });
 document.addEventListener('click', sesHazirla, { once: true });
 
