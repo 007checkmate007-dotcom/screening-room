@@ -445,11 +445,24 @@ function saatleriGuncelle() {
 }
 
 // ------------------------------------------------------------ host
+/// Host: araci sunucu (PeerJS) baglantisi koparsa izleyicilerle olan dogrudan
+/// baglantilar surer; yalnizca yeni gelenler bulamaz. Bu yuzden artan
+/// beklemeyle yeniden baglanilir ve baglaninca durum geri doner. Sayfa
+/// yenilenince sunucu eski oturumu ~1 dk acik sayar: o surede ad "alinmis"
+/// doner, beklenip tekrar denenir ("already open" denmez).
+let hostAcildi = false;
+let yenidenDeneme = 0;
 function hostBasla() {
   durum('opening the room…');
   $('ebeveyn').classList.remove('gizli');
   peer = new Peer(P.oda, AYAR);
   peer.on('open', () => {
+    yenidenDeneme = 0;
+    if (hostAcildi) {   // yeniden baglanti: yalnizca durumu duzelt, ekrana dokunma
+      akis ? durum('LIVE', 'canli') : durum('room active', 'aktif');
+      return;
+    }
+    hostAcildi = true;
     const link = `${location.origin}${location.pathname}${location.hash}`;
     durum('room active', 'aktif');
     $('yayinla').classList.remove('gizli');
@@ -483,17 +496,31 @@ function hostBasla() {
     conn.on('close', () => ayrildi(conn.peer));
     conn.on('error', () => ayrildi(conn.peer));
   });
-  peer.on('disconnected', () => { durum('reconnecting…'); peer.reconnect(); });
+  peer.on('disconnected', yenidenBaglan);
   peer.on('error', (e) => {
     if (e.type === 'unavailable-id') {
-      durum('already open');
-      bekleGoster('<h2>The room is already open</h2><p>Looks like it is open in another tab or device. Close that one first.</p>');
+      // Cogu zaman ayni odanin az onceki oturumu (sayfa yenilendi): bekle, tekrar dene.
+      durum('waiting for the old session…');
+      if (!hostAcildi) bekleGoster('<div class="kedi-buyuk">⏳</div><h2>Opening the room…</h2><p>The room was open a moment ago (maybe you refreshed). Trying again every few seconds.<br>If it is open in another tab, close that one.</p>');
+      setTimeout(() => {
+        if (peer.destroyed) return;
+        if (hostAcildi) peer.reconnect();
+        else { peer.destroy(); hostBasla(); }
+      }, 5000);
       return;
     }
+    if (['network', 'server-error', 'socket-error', 'socket-closed'].includes(e.type)) { yenidenBaglan(); return; }
     if (e.type === 'peer-unavailable') return;
     durum('connection error');
     mesajEkle({ tur: 'sistem', metin: 'connection error: ' + (e.type || e.message) });
   });
+}
+
+function yenidenBaglan() {
+  if (!peer || peer.destroyed || !peer.disconnected) return;
+  durum('reconnecting…');
+  const bekleme = Math.min(1000 * 2 ** yenidenDeneme++, 15000);
+  setTimeout(() => { if (!peer.destroyed && peer.disconnected) peer.reconnect(); }, bekleme);
 }
 
 function hostVeri(id, veri) {
